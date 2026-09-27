@@ -1,0 +1,118 @@
+/* Dark theme only. */
+:root {
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --bg: #15171a;
+  --surface: #1f2226;
+  --surface-2: #0f1113;
+  --cell: #1f2226;
+  --given: #34312a;
+  --grid: #33373d;
+  --frame: #6a6f77;
+  --ink: #ece7de;
+  --muted: #9a958c;
+  --rail: #d3d8de;
+  --sleeper: #7d5936;
+  --ballast: #272a2f;
+  --accent: #4fb389;
+  --on-accent: #0f1a14;
+  --ok: #5cc28f;
+  --bad: #ef6b57;
+  --hint: #7a6420;
+  --scrim: rgb(0 0 0 / 0.6);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#app {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.screen {
+  width: 100%;
+  max-width: 560px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 16px)
+    calc(env(safe-area-inset-bottom) + 16px) calc(env(safe-area-inset-left) + 16px);
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  text-align: center;
+  font-size: 17px;
+}
+
+button {
+  font: 600 16px var(--font);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--grid);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.08s, background 0.15s;
+}
+button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+button.big {
+  padding: 16px;
+  font-size: 18px;
+  border-radius: 14px;
+}
+button.link {
+  background: none;
+  border: 0;
+  color: var(--accent);
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
+}
+.icon-btn svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
