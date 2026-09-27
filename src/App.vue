@@ -6,6 +6,7 @@ import MainMenu from './components/MainMenu.vue'
 import LevelSelect from './components/LevelSelect.vue'
 import GameScreen from './components/GameScreen.vue'
 import BadgesScreen from './components/BadgesScreen.vue'
+import UpdatePrompt from './components/UpdatePrompt.vue'
 
 const screen = ref('menu') // 'menu' | 'levels' | 'badges' | 'game'
 const current = ref(0)
@@ -59,4 +60,5 @@ function continueGame() {
     @back="go('levels')"
     @next="play(current + 1)"
   />
+  <UpdatePrompt />
 </template>
