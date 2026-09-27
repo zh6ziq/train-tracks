@@ -3,7 +3,16 @@ import { useRegisterSW } from 'virtual:pwa-register/vue'
 
 // A new version waits in the background until the player chooses to reload.
 // Progress is in localStorage, so reloading never loses it.
-const { needRefresh, updateServiceWorker } = useRegisterSW()
+const { needRefresh, updateServiceWorker } = useRegisterSW({
+  // Phones keep home-screen apps paused for days, so also check when the app
+  // comes back to the foreground and every hour while it stays open.
+  onRegisteredSW(_url, registration) {
+    if (!registration) return
+    const check = () => navigator.onLine && registration.update().catch(() => {})
+    document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && check())
+    setInterval(check, 60 * 60 * 1000)
+  },
+})
 </script>
 
 <template>
