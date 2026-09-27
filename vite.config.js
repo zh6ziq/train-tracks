@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      // New versions install themselves in the background; players get them on next launch.
-      registerType: 'autoUpdate',
+      // New versions download in the background and wait; UpdatePrompt asks the player to reload.
+      registerType: 'prompt',
       includeAssets: ['favicon.ico', 'icon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'Train Tracks',
