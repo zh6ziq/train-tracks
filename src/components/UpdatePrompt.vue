@@ -1,8 +1,9 @@
 <script setup>
+import { ref } from 'vue'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 
-// A new version waits in the background until the player chooses to reload.
-// Progress is in localStorage, so reloading never loses it.
+// A new version waits in the background until the player taps Reload; × hides
+// the banner until the next launch. Progress is in localStorage, so reloading never loses it.
 const { needRefresh, updateServiceWorker } = useRegisterSW({
   // Phones keep home-screen apps paused for days, so also check when the app
   // comes back to the foreground and every hour while it stays open.
@@ -13,13 +14,23 @@ const { needRefresh, updateServiceWorker } = useRegisterSW({
     setInterval(check, 60 * 60 * 1000)
   },
 })
+
+const updating = ref(false)
+
+function reload() {
+  updating.value = true
+  updateServiceWorker(true)
+  // The page normally reloads once the new worker takes over, but iOS can miss
+  // that event. The worker is already activating, so a plain reload gets the new version.
+  setTimeout(() => location.reload(), 3000)
+}
 </script>
 
 <template>
   <aside v-if="needRefresh" class="update" role="status">
     <p>A new version is ready.</p>
-    <button class="primary" @click="updateServiceWorker(true)">Reload</button>
-    <button class="icon-btn" aria-label="Later" @click="needRefresh = false">
+    <button class="primary" :disabled="updating" @click="reload">{{ updating ? 'Updating…' : 'Reload' }}</button>
+    <button v-if="!updating" class="icon-btn" aria-label="Later" @click="needRefresh = false">
       <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
   </aside>
