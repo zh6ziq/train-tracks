@@ -8,6 +8,7 @@ defineProps({
 })
 const emit = defineEmits(['continue', 'badges', 'levels'])
 const showRules = ref(false)
+const version = __APP_VERSION__
 </script>
 
 <template>
@@ -41,6 +42,7 @@ const showRules = ref(false)
     </div>
 
     <InstallHint />
+    <p class="version">Version {{ version }}</p>
   </section>
 </template>
 
@@ -103,5 +105,11 @@ h1 {
 .rules ul {
   margin: 0;
   padding-left: 18px;
+}
+.version {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
 }
 </style>
