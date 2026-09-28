@@ -20,6 +20,8 @@ export default defineConfig({
     VitePWA({
       // New versions download in the background and wait; UpdatePrompt asks the player to reload.
       registerType: 'prompt',
+      // Never answer API calls with the cached app shell.
+      workbox: { navigateFallbackDenylist: [/^\/api\//] },
       includeAssets: ['favicon.ico', 'icon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
         name: 'Train Tracks',

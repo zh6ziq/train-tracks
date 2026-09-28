@@ -10,16 +10,15 @@ import UpdatePrompt from './components/UpdatePrompt.vue'
 
 const screen = ref('menu') // 'menu' | 'levels' | 'badges' | 'game'
 const current = ref(0)
-const solved = ref(solvedCount())
-const badges = ref(catCounts())
+// Computed from reactive storage, so they also update when a sync brings in progress.
+const solved = computed(() => solvedCount())
+const badges = computed(() => catCounts())
 
 const level = computed(() => levels[current.value])
 // Number of the level inside its pack, e.g. "Medium 12".
 const numberInPack = computed(() => levels.slice(0, current.value + 1).filter((l) => l.pack === level.value.pack).length)
 
 function go(to) {
-  solved.value = solvedCount()
-  badges.value = catCounts()
   screen.value = to
 }
 
