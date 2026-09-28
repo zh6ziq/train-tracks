@@ -32,7 +32,7 @@ async function submit() {
   error.value = ''
   done.value = false
   if (!normalizeCode(entry.value)) {
-    error.value = 'That code doesn’t look right.'
+    error.value = 'That ticket doesn’t look right.'
     return
   }
   busy.value = true
@@ -50,16 +50,20 @@ async function submit() {
 
 <template>
   <div class="sync">
-    <p class="label">Your sync code</p>
+    <p class="label">Your train ticket</p>
     <div class="code-row">
       <code>{{ code }}</code>
       <button @click="copy">{{ copied ? 'Copied' : 'Copy' }}</button>
     </div>
-    <p class="hint">Keep this code. Enter it on another device, or after reinstalling, to get your progress back.</p>
+    <p class="hint">
+      <strong class="warn"><span aria-hidden="true">⚠︎</span> Keep this ticket.</strong>
+      Use it on another device, or after reinstalling, to get your progress back.
+    </p>
+    <p class="hint"><em>“Lose the ticket, miss the cat. <span aria-hidden="true">🐈</span>”</em></p>
     <p class="status">{{ status }}</p>
 
     <form class="enter" @submit.prevent="submit">
-      <label for="sync-code" class="label">Have a code from another device?</label>
+      <label for="sync-code" class="label">Have a ticket from another device?</label>
       <div class="code-row">
         <input
           id="sync-code"
@@ -69,11 +73,11 @@ async function submit() {
           autocapitalize="characters"
           spellcheck="false"
         />
-        <button type="submit" :disabled="busy || !entry">{{ busy ? '…' : 'Use code' }}</button>
+        <button type="submit" :disabled="busy || !entry">{{ busy ? '…' : 'Use ticket' }}</button>
       </div>
-      <p class="hint">Progress on this device is combined with that code’s. Nothing is lost.</p>
+      <p class="hint">Your progress from that device will appear here, and both devices stay in sync from now on. Anything you’ve already done on this device is kept too.</p>
       <p v-if="error" class="error">{{ error }}</p>
-      <p v-if="done" class="ok">Progress combined. This device now uses that code.</p>
+      <p v-if="done" class="ok">Done! This device now has your progress and will stay in sync.</p>
     </form>
   </div>
 </template>
@@ -135,6 +139,12 @@ input:focus-visible {
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--grid);
+}
+.warn {
+  color: var(--ink);
+}
+.warn span {
+  color: var(--maybe);
 }
 .error {
   color: var(--bad);

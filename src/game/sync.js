@@ -70,7 +70,7 @@ export function syncNow({ keepalive = false } = {}) {
 // Switch to a code from another device. This device's progress is merged in, never dropped.
 export async function useCode(input) {
   const code = normalizeCode(input)
-  if (!code) throw new Error('That code doesn’t look right.')
+  if (!code) throw new Error('That ticket doesn’t look right.')
   const merged = await put(code, exportProgress())
   setSyncCode(code)
   importProgress(merged, false)
