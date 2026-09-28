@@ -21,7 +21,9 @@ function newCode() {
 
 // "TRK-7Q4M-X2PA-9KDE" -> "7Q4MX2PA9KDE"; also forgives lowercase and O/I/L typos.
 export function normalizeCode(input) {
-  const s = String(input).toUpperCase().replace(/^TRK/, '').replace(/[^0-9A-Z]/g, '')
+  let s = String(input).toUpperCase().replace(/[^0-9A-Z]/g, '')
+  // Only drop "TRK" when it's the prefix, not the start of a code typed without one.
+  if (s.length === 15 && s.startsWith('TRK')) s = s.slice(3)
   const fixed = s.replace(/O/g, '0').replace(/[IL]/g, '1')
   return CODE.test(fixed) ? fixed : null
 }
