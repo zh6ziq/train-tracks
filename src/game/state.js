@@ -1,4 +1,4 @@
-// Game state for one level: the player's track, X marks, undo history, hints.
+// Game state for one level: the player's track, cell marks (X / maybe track), undo history, hints.
 import { reactive, computed } from 'vue'
 import { DIRS, DIR_BY_BIT, bitCount, fixedMasks, lineCounts, isSolved, decodeSolution, encodeMasks } from './rules.js'
 import { loadBoard, saveBoard, clearBoard, markSolved, isLevelSolved } from './storage.js'
@@ -10,7 +10,7 @@ export function createGame(level) {
 
   const state = reactive({
     masks: fixed.slice(),
-    xs: new Array(n * n).fill(false),
+    marks: new Array(n * n).fill(0), // 0 none, 1 X (no track), 2 maybe track
     history: [],
     hintsUsed: 0,
     solved: isLevelSolved(level.id),
@@ -22,7 +22,7 @@ export function createGame(level) {
     const saved = loadBoard(level.id)
     if (saved && saved.m.length === n * n) {
       state.masks = Array.from(saved.m, (ch) => parseInt(ch, 16))
-      state.xs = Array.from(saved.x, (ch) => ch === '1')
+      state.marks = Array.from(saved.x, (ch) => Number(ch) || 0)
     }
   }
 
@@ -36,7 +36,7 @@ export function createGame(level) {
   }
 
   function snapshot() {
-    state.history.push({ masks: state.masks.slice(), xs: state.xs.slice() })
+    state.history.push({ masks: state.masks.slice(), marks: state.marks.slice() })
     if (state.history.length > 200) state.history.shift()
   }
 
@@ -47,7 +47,7 @@ export function createGame(level) {
       markSolved(level.id)
       return
     }
-    saveBoard(level.id, { m: encodeMasks(state.masks), x: state.xs.map((v) => (v ? '1' : '0')).join('') })
+    saveBoard(level.id, { m: encodeMasks(state.masks), x: state.marks.join('') })
   }
 
   function hasEdge(i, bit) {
@@ -65,8 +65,8 @@ export function createGame(level) {
       if (bitCount(state.masks[i]) >= 2 || bitCount(state.masks[j]) >= 2) return false
       state.masks[i] |= bit
       state.masks[j] |= opp
-      state.xs[i] = false
-      state.xs[j] = false
+      state.marks[i] = 0
+      state.marks[j] = 0
     } else {
       if (!hasEdge(i, bit)) return true
       if (fixed[i] & bit || fixed[j] & opp) return false
@@ -76,7 +76,7 @@ export function createGame(level) {
     return true
   }
 
-  // Tap on a cell: empty -> X -> empty. Tapping your own track removes it.
+  // Tap on a cell: empty -> X -> maybe track -> empty. Tapping your own track removes it.
   function tap(i) {
     if (state.solved) return
     const loose = state.masks[i] & ~fixed[i]
@@ -85,7 +85,7 @@ export function createGame(level) {
       for (const d of DIRS) if (loose & d.bit) setEdge(i, d.bit, false)
     } else if (!state.masks[i]) {
       snapshot()
-      state.xs[i] = !state.xs[i]
+      state.marks[i] = (state.marks[i] + 1) % 3
     } else {
       return
     }
@@ -112,7 +112,7 @@ export function createGame(level) {
     const prev = state.history.pop()
     if (!prev || state.solved) return
     state.masks = prev.masks
-    state.xs = prev.xs
+    state.marks = prev.marks
     persist()
   }
 
@@ -120,7 +120,7 @@ export function createGame(level) {
     if (state.solved) return
     snapshot()
     state.masks = fixed.slice()
-    state.xs = new Array(n * n).fill(false)
+    state.marks = new Array(n * n).fill(0)
     clearBoard(level.id)
   }
 
@@ -139,9 +139,9 @@ export function createGame(level) {
       }
     }
     for (let i = 0; i < n * n; i++) {
-      if (state.xs[i] && solution[i]) {
+      if (state.marks[i] === 1 && solution[i]) {
         snapshot()
-        state.xs[i] = false
+        state.marks[i] = 0
         state.hintsUsed++
         persist()
         return { cell: i, kind: 'unmarked' }

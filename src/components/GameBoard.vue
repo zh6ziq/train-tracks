@@ -274,13 +274,14 @@ function onUp() {
     <path :d="trackPath" class="sleepers" />
     <rect :width="width" :height="height" class="rails" mask="url(#rail-mask)" />
 
-    <!-- X marks -->
+    <!-- Marks: X (no track) and dot (maybe track) -->
     <template v-for="i in cells" :key="`x${i}`">
       <path
-        v-if="game.state.xs[i]"
+        v-if="game.state.marks[i] === 1"
         class="xmark"
         :d="`M${cx(i) - 6} ${cy(i) - 6}L${cx(i) + 6} ${cy(i) + 6}M${cx(i) + 6} ${cy(i) - 6}L${cx(i) - 6} ${cy(i) + 6}`"
       />
+      <circle v-else-if="game.state.marks[i] === 2" class="maybe" :cx="cx(i)" :cy="cy(i)" r="4.5" />
     </template>
 
     <!-- Column counts (top) and row counts (right) -->
@@ -377,9 +378,13 @@ function onUp() {
   fill: var(--accent);
 }
 .xmark {
-  stroke: var(--muted);
+  stroke: var(--bad);
   stroke-width: 2.5;
   stroke-linecap: round;
+  pointer-events: none;
+}
+.maybe {
+  fill: var(--maybe);
   pointer-events: none;
 }
 .count {

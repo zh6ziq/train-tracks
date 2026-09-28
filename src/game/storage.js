@@ -34,7 +34,7 @@ export function solvedCount() {
   return Object.keys(data.solved).length
 }
 
-// In-progress board for a level: { m: masks as hex string, x: X marks as "0101..." }
+// In-progress board for a level: { m: masks as hex string, x: marks as "0120..." (0 none, 1 X, 2 maybe track) }
 export function loadBoard(id) {
   return data.boards[id] || null
 }

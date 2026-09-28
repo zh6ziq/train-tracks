@@ -18,6 +18,7 @@
   --ok: #5cc28f;
   --bad: #ef6b57;
   --hint: #7a6420;
+  --maybe: #c9a93a;
   --scrim: rgb(0 0 0 / 0.6);
   color-scheme: dark;
 }

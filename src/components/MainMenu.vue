@@ -35,7 +35,7 @@ const version = __APP_VERSION__
       <ul>
         <li>The numbers show how many cells in that row or column hold track.</li>
         <li><b>Drag</b> across cells to lay track. Drag over existing track to remove it.</li>
-        <li><b>Tap</b> an empty cell to mark it ✕ (no track). Tap your track to remove it.</li>
+        <li><b>Tap</b> an empty cell to mark it ✕ (no track), again for ● (maybe track), and once more to clear. Tap your track to remove it.</li>
         <li>Shaded cells are given and can't be changed.</li>
         <li>No loops, no branches and no dead ends.</li>
       </ul>
