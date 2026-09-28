@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import InstallHint from './InstallHint.vue'
+import SyncPanel from './SyncPanel.vue'
 
 defineProps({
   solved: { type: Number, default: 0 },
@@ -8,6 +9,7 @@ defineProps({
 })
 const emit = defineEmits(['continue', 'badges', 'levels'])
 const showRules = ref(false)
+const showSync = ref(false)
 const version = __APP_VERSION__
 </script>
 
@@ -27,8 +29,13 @@ const version = __APP_VERSION__
       <button class="primary big" @click="emit('continue')">{{ solved ? 'Continue' : 'Play' }}</button>
       <button class="big" @click="emit('badges')">Badges</button>
       <button class="big" @click="emit('levels')">Choose puzzle</button>
-      <button class="link" @click="showRules = !showRules">{{ showRules ? 'Hide rules' : 'How to play' }}</button>
+      <div class="links">
+        <button class="link" @click="showRules = !showRules">{{ showRules ? 'Hide rules' : 'How to play' }}</button>
+        <button class="link" @click="showSync = !showSync">{{ showSync ? 'Hide sync' : 'Sync progress' }}</button>
+      </div>
     </div>
+
+    <SyncPanel v-if="showSync" />
 
     <div v-if="showRules" class="rules">
       <p>Lay one unbroken track from <b>A</b> to <b>B</b>.</p>
@@ -91,6 +98,11 @@ h1 {
   gap: 10px;
   width: min(320px, 100%);
   margin: 0 auto;
+}
+.links {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
 .rules {
   background: var(--surface);
